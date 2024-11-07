@@ -18,8 +18,8 @@ url = URL_BASE + ENDPOINT + INDICATOR
 
 
 params = {
-    'start_date': '2023-01-01T00',
-    'end_date': '2023-06-31T23'
+    'start_date': '2023-01-01T01',
+    'end_date': '2023-02-01T00'
 }
 
 
