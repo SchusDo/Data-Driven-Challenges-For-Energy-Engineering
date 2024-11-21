@@ -55,14 +55,17 @@ model = Sequential([
     LSTM(50, return_sequences=True, input_shape=(SEQ_LENGTH, 1)),
     LSTM(50, return_sequences=False),
     Dense(25, activation='relu'),
-    Dense(1)
+    Dense(FORECAST_HORIZON)
 ])
 
+
+# Hpyerparameter optimization is missing
 model.compile(optimizer='adam', loss='mean_squared_error')
 model.summary()
 
-# Train the model
-history = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=20, batch_size=32, verbose=1)
+# Train the model, batch size original: 32, epochs = 4
+history = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=4, batch_size=10, verbose=1)
+
 print('plot7')
 # Plot training history
 plt.figure(figsize=(10, 5))
