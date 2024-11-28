@@ -65,8 +65,8 @@ model.summary()
 
 # Train the model, batch size original: 32, epochs = 4
 history = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=4, batch_size=10, verbose=1)
-
 print('plot7')
+
 # Plot training history
 plt.figure(figsize=(10, 5))
 plt.plot(history.history['loss'], label='Training Loss')
@@ -77,11 +77,13 @@ plt.ylabel('Loss')
 plt.legend()
 plt.show()
 print('plot8')
+
 # Make predictions
 predictions = model.predict(X_test)
 predictions = scaler.inverse_transform(predictions)  # Undo scaling
 y_test_actual = scaler.inverse_transform(y_test.reshape(-1, FORECAST_HORIZON))
 print('plot9')
+
 # Plot predictions vs. actual
 plt.figure(figsize=(12, 6))
 plt.plot(y_test_actual[0], label='Actual Prices (Next 24 hours)')
@@ -92,10 +94,12 @@ plt.ylabel('Price')
 plt.legend()
 plt.show()
 print('plot10')
+
 # Predict the next day's price
 last_sequence = scaled_data[-SEQ_LENGTH:]  # Last 30 days of hourly data
 last_sequence = np.expand_dims(last_sequence, axis=0)  # Reshape for LSTM
 next_day_scaled = model.predict(last_sequence)
 next_day_prices = scaler.inverse_transform(next_day_scaled)
 print(f"Predicted electricity prices for the next 24 hours: {next_day_prices[0]}")
+
 # not showing the 24 hours!
