@@ -159,7 +159,7 @@ forecast_df = pd.DataFrame({'actual': y_test, 'forecast': forecast}, index=y_tes
 
 # Plot the results
 plt.figure(figsize=(12, 6))
-plt.plot(y_train[-7*24:], label='Training Data (Last 7 days)')
+plt.plot(y_train[-2*24:], label='Training Data (Last 2 days)')
 plt.plot(y_test, label='Actual Prices (Last 24 hours)', color='blue', linestyle='--')
 plt.plot(forecast_df['forecast'], label='Forecast (Next 24 hours)', color='orange')
 plt.xlabel('Time')
