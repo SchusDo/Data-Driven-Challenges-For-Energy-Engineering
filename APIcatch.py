@@ -3,7 +3,8 @@ import pandas as pd
 import numpy as np
 
 
-API_TOKEN = 'fb4b803d6e48a2f0e5b4f2cdbc6cf3811abe64ce6ee763bf71ac7bdf2f4a39c1'
+API_TOKEN = 'XXXXXXXXX'
+# contact ESIOS to get a valid token: consultasios@ree.es
 
 headers = {
     'Host': 'api.esios.ree.es',
