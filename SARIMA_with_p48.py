@@ -14,28 +14,28 @@ electricity_data = pd.read_csv(
 
 # Load the wind forecast
 wind_data = pd.read_csv(
-    'WIND_D+1_DAILY_FORECAST.csv',
+    'datas_v2/WIND_D+1_DAILY_FORECAST.csv',
     parse_dates=['datetime_utc'],  # Parse datetime column
     index_col='datetime_utc'      # Set datetime_utc as the index
 )
 
 # Load the PV forecast
 pv_data = pd.read_csv(
-    'PHOTOVOLTAIC_D+1_DAILY_FORECAST.csv',
+    'datas_v2/PHOTOVOLTAIC_D+1_DAILY_FORECAST.csv',
     parse_dates=['datetime_utc'],  # Parse datetime column
     index_col='datetime_utc'      # Set datetime_utc as the index
 )
 
 # Load the solar thermal forecast
 solar_data = pd.read_csv(
-    'SOLAR_THERMAL_FORECAST.csv',
+    'datas_v2/SOLAR_THERMAL_FORECAST.csv',
     parse_dates=['datetime_utc'],  # Parse datetime column
     index_col='datetime_utc'      # Set datetime_utc as the index
 )
 
 # Load the demand forecast
 demand_data = pd.read_csv(
-    'DEMAND_D+1_DAILY_FORECAST.csv',
+    'datas_v2/DEMAND_D+1_DAILY_FORECAST.csv',
     parse_dates=['datetime_utc'],  # Parse datetime column
     index_col='datetime_utc'      # Set datetime_utc as the index
 )
@@ -113,28 +113,46 @@ demand_data = demand_data.reindex(electricity_data.index, method='ffill')
 #electricity_data['value'] = electricity_data['value'].interpolate()
 #wind_data['value'] = wind_data['value'].interpolate()
 
+# Plot  datas
+
+plotdays=6
+
+plt.figure(figsize=(12, 6))
+plt.plot(wind_data['value'][-24*plotdays:], label='Wind Forecast')
+plt.plot(pv_data['value'][-24*plotdays:], label='PV Forecast')
+plt.plot(solar_data['value'][-24*plotdays:], label='Thermal Solar Forecast')
+#plt.plot(demand_data['value'][-24*plotdays:], label='Demand Forecast')
+plt.plot(electricity_data['value'][-24*plotdays:]*100, label='Price Forecast')
+plt.ylabel('MW')
+plt.xlabel('Time')
+plt.title('Electricity Price Forecast with SARIMA and P48 values')
+plt.legend()
+plt.show()
+
 
 # Check for NaN values
 #if electricity_data.isna().sum().sum() > 0:
 #    raise ValueError("Data contains NaN values after merging. Please ensure all missing values are handled.")
 
-# Define dependent and exogenous variables directly
-y_train = electricity_data['value'][:-24]
-y_test = electricity_data['value'][-24:]
+window=24
 
-# Exogenous variables (wind,pv, solar) Built in a dataframe
+# Define dependent variables
+y_train = electricity_data['value'][:-window]
+y_test = electricity_data['value'][-window:]
+
+# Define Exogenous variables (wind,pv, solar) Built in a dataframe
 X_train = pd.DataFrame({
-    'wind':wind_data['value'][:-24],
-    'pv':pv_data['value'][:-24],
-    'solar':solar_data['value'][:-24],
-    'demand':demand_data['value'][:-24]
+    'wind':wind_data['value'][:-window],
+    'pv':pv_data['value'][:-window],
+    'solar':solar_data['value'][:-window],
+    'demand':demand_data['value'][:-window]
 })
 
 X_test = pd.DataFrame({
-    'wind':wind_data['value'][-24:],
-    'pv':pv_data['value'][-24:],
-    'solar':solar_data['value'][-24:],
-    'demand':demand_data['value'][-24:]
+    'wind':wind_data['value'][-window:],
+    'pv':pv_data['value'][-window:],
+    'solar':solar_data['value'][-window:],
+    'demand':demand_data['value'][-window:]
 })
 
 
@@ -171,3 +189,5 @@ plt.show()
 # Save the forecast and actual values to a CSV file for further analysis
 forecast_df.to_csv('forecast_vs_actual_with_p48.csv')
 print("Forecast vs actual results saved to 'forecast_vs_actual_with_p48.csv'.")
+
+

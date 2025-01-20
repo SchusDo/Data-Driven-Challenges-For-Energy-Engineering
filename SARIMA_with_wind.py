@@ -14,7 +14,7 @@ electricity_data = pd.read_csv(
 
 # Load the wind forecast
 wind_data = pd.read_csv(
-    'WIND_D+1_DAILY_FORECAST.csv',
+    'datas_v2/WIND_D+1_DAILY_FORECAST.csv',
     parse_dates=['datetime_utc'],  # Parse datetime column
     index_col='datetime_utc'      # Set datetime_utc as the index
 )
@@ -90,7 +90,7 @@ forecast_df = pd.DataFrame({'actual': y_test, 'forecast': forecast}, index=y_tes
 
 # Plot the results
 plt.figure(figsize=(12, 6))
-plt.plot(y_train[-7*24:], label='Training Data (Last 7 days)')
+plt.plot(y_train[-2*24:], label='Training Data (Last 2 days)')
 plt.plot(y_test, label='Actual Prices (Last 24 hours)', color='blue', linestyle='--')
 plt.plot(forecast_df['forecast'], label='Forecast (Next 24 hours)', color='orange')
 plt.xlabel('Time')

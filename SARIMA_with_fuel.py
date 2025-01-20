@@ -13,7 +13,7 @@ electricity_data = pd.read_csv(
 
 # Load the fuel price data
 fuel_data = pd.read_csv(
-    'fuel_price.csv',
+    'datas_v2/fuel_price.csv',
     parse_dates=['datetime_utc'],  # Parse datetime column
     index_col='datetime_utc'      # Set datetime_utc as the index
 )
@@ -26,6 +26,7 @@ electricity_data = electricity_data[electricity_data['geo_name'] == 'España']
 # Ensure both datasets are sorted and align their indices
 electricity_data = electricity_data.sort_index()
 fuel_data = fuel_data.sort_index()
+print(fuel_data.head())
 
 # Handle duplicate timestamps in electricity data
 if electricity_data.index.duplicated().sum() > 0:
@@ -38,6 +39,7 @@ electricity_data = electricity_data.asfreq('h')
 
 # Forward-fill daily fuel price to align with hourly electricity data
 fuel_data = fuel_data.reindex(electricity_data.index, method='ffill')
+print(fuel_data.head())
 
 # Interpolate missing electricity prices
 electricity_data['value'] = electricity_data['value'].interpolate()
@@ -83,7 +85,7 @@ forecast_df = pd.DataFrame({'actual': y_test, 'forecast': forecast}, index=y_tes
 
 # Plot the results
 plt.figure(figsize=(12, 6))
-plt.plot(y_train[-7*24:], label='Training Data (Last 7 days)')
+plt.plot(y_train[-2*24:], label='Training Data (Last 2 days)')
 plt.plot(y_test, label='Actual Prices (Last 24 hours)', color='blue', linestyle='--')
 plt.plot(forecast_df['forecast'], label='Forecast (Next 24 hours)', color='orange')
 plt.xlabel('Time')

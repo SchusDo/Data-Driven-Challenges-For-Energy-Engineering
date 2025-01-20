@@ -33,13 +33,15 @@ train_data = data['value'][:-24]  # All but the last 24 hours for training
 test_data = data['value'][-24:]  # Last 24 hours for testing
 print("Training Data Preview:")
 print(train_data.head())
+print(train_data.tail())
+print(test_data.head())
 
 # Ensure training data is not empty
 if train_data.empty or test_data.empty:
     raise ValueError("Training or testing data is empty. Ensure the dataset contains valid data.")
 
 # Define seasonal order for SARIMA
-seasonal_order = (1, 1, 1, 24)  # Adjust these values based on seasonality
+seasonal_order = (1, 1, 1, 24)  # P,Q,D,s Adjust these values based on seasonality
 
 # Fit the SARIMA model
 model = SARIMAX(train_data, order=(1, 1, 0), seasonal_order=seasonal_order)
@@ -62,7 +64,7 @@ forecast_df = pd.DataFrame({'actual': test_data, 'forecast': forecast}, index=te
 
 # Plot the results
 plt.figure(figsize=(12, 6))
-plt.plot(train_data[-7*24:], label='Training Data (Last 7 days)')
+plt.plot(train_data[-2*24:], label='Training Data (Last 2 days)')
 plt.plot(test_data, label='Actual Prices (Last 24 hours)', color='blue', linestyle='--')
 plt.plot(forecast_df['forecast'], label='Forecast (Next 24 hours)', color='orange')
 plt.xlabel('Time')
